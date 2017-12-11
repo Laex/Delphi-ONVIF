@@ -187,6 +187,12 @@ interface
 {$DEFINE D10UP}
 {$DEFINE D15UP}
 {$ENDIF}
+// Delphi 10.2 Tokyo
+{$IFDEF VER320}
+{$DEFINE D7UP}
+{$DEFINE D10UP}
+{$DEFINE D15UP}
+{$ENDIF}
 // define if you want to include the Graphics unit, and graphics-related properties.
 { .$define USEGRAPHICS }
 
