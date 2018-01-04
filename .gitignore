@@ -3,6 +3,7 @@ __history/
 __recovery/
 Debug/
 Release/
+Android/
 
 #Files
 *.exe

@@ -32,11 +32,12 @@ requires
   rtl,
   IndySystem,
   IndyCore,
-  IndyProtocols;
+  IndyProtocols,
+  fmx;
 
 contains
   ONVIF in '..\ONVIF.pas',
-  uNativeXml in '..\uNativeXml.pas';
+  Xml.VerySimple in '..\Xml.VerySimple.pas';
 
 end.
 

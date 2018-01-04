@@ -1,0 +1,71 @@
+object FormOnvifTest: TFormOnvifTest
+  Left = 0
+  Top = 0
+  Caption = 'OnvifTest'
+  ClientHeight = 433
+  ClientWidth = 274
+  FormFactor.Width = 320
+  FormFactor.Height = 480
+  FormFactor.Devices = [Desktop]
+  OnCreate = FormCreate
+  DesignerMasterStyle = 3
+  object Panel1: TPanel
+    Align = Client
+    Size.Width = 274.000000000000000000
+    Size.Height = 433.000000000000000000
+    Size.PlatformDefault = False
+    TabOrder = 6
+    object CBProbe: TCornerButton
+      Align = Bottom
+      Position.Y = 332.000000000000000000
+      Sides = [Top, Left, Bottom, Right]
+      Size.Width = 274.000000000000000000
+      Size.Height = 36.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 1
+      Text = 'Probe'
+      XRadius = 3.000000000000000000
+      YRadius = 3.000000000000000000
+      OnClick = CBProbeClick
+    end
+    object Memo1: TMemo
+      Touch.InteractiveGestures = [Pan, LongTap, DoubleTap]
+      DataDetectorTypes = []
+      ReadOnly = True
+      Align = Bottom
+      Position.Y = 368.000000000000000000
+      Size.Width = 274.000000000000000000
+      Size.Height = 65.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 2
+      Viewport.Width = 266.000000000000000000
+      Viewport.Height = 57.000000000000000000
+    end
+    object TreeView1: TTreeView
+      Touch.GestureManager = GestureManager1
+      Touch.InteractiveGestures = [Pan, DoubleTap]
+      OnGesture = TreeView1Gesture
+      Align = Top
+      Size.Width = 274.000000000000000000
+      Size.Height = 329.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 3
+      OnDblClick = TreeView1DblClick
+      Viewport.Width = 274.000000000000000000
+      Viewport.Height = 329.000000000000000000
+    end
+  end
+  object ONVIFProbe1: TONVIFProbe
+    OnCompleted = ONVIFProbe1Completed
+    OnProbeMath = ONVIFProbe1ProbeMath
+    OnLogMessage = ONVIFProbe1LogMessage
+    BindToAllAvailableLocalIPsType = []
+    Left = 224
+    Top = 400
+  end
+  object GestureManager1: TGestureManager
+    Sensitivity = 80.000000000000000000
+    Left = 8
+    Top = 400
+  end
+end
