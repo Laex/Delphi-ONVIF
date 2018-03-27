@@ -152,12 +152,12 @@ Type
     Value: String;
   end;
 
-  TPoint = record
+  TRealPoint = record
     x: Real;
     y: Real;
   end;
 
-  TElementItemXY = TPoint;
+  TElementItemXY = TRealPoint;
 
   TElementItemLayout = record
     Columns: Integer;
@@ -166,7 +166,7 @@ Type
     Scale: TElementItemXY;
   end;
 
-  TPolygon = TPoint;
+  TPolygon = TRealPoint;
 
   TElementItemField = TArray<TPolygon>;
 
