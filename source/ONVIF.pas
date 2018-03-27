@@ -593,7 +593,12 @@ var
   i, j: Integer;
   Profile: TProfile;
   A: TAnalyticsModule;
+  hFormatSettings: TFormatSettings;
 begin
+  hFormatSettings := FormatSettings;
+  hFormatSettings.DecimalSeparator := '.'; // me 260318 '.' for DecimalSeparator in german os
+  hFormatSettings.ThousandSeparator := ',';
+
   XML := TXmlVerySimple.Create;
   SS := TStringStream.Create(XMLProfiles);
   Result := False;
@@ -662,7 +667,7 @@ begin
             end;
             M := N.Find('Quality');
             if Assigned(M) then
-              Profile.VideoEncoderConfiguration.Quality := M.Text.ToDouble;
+              Profile.VideoEncoderConfiguration.Quality := Double.Parse(M.Text, hFormatSettings); // me 260318 old: M.Text.ToDouble
             M := N.Find('RateControl');
             if Assigned(M) then
             begin
