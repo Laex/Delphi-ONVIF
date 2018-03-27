@@ -358,6 +358,7 @@ procedure ONVIFRequest(const Addr, Request: String; Var Answer: String); overloa
 procedure GetONVIFPasswordDigest(const UserName, Password: String; Var PasswordDigest, Nonce, Created: String);
 function GetONVIFDateTime(const DateTime: TDateTime): String;
 function BytesToString(Data: TBytes): String; inline;
+function StringToBytes(aData: String): TBytes; inline;
 function SHA1(const Data: TBytes): TBytes;
 
 Type
@@ -417,9 +418,21 @@ begin
 end;
 
 function BytesToString(Data: TBytes): String; inline;
+var
+  s: AnsiString; // me 2603018 First use AnsiString
 begin
-  SetLength(Result, Length(Data));
-  Move(Data[0], Result[1], Length(Data));
+  SetLength(s, Length(Data));
+  Move(Data[0], s[1], Length(Data));
+  Result := string(s);
+end;
+
+function StringToBytes(aData: String): TBytes; inline;
+var
+  s: AnsiString; // me 2603018 First use AnsiString
+begin
+  s := AnsiString(aData);
+  SetLength(Result, Length(aData));
+  Move(s[1], Result[0], Length(aData));
 end;
 
 procedure ONVIFRequest(const Addr, Request: String; Var Answer: String);
@@ -1105,7 +1118,6 @@ Var
   i: Integer;
   raw_nonce, bnonce, digest: TBytes;
   raw_digest: TBytes;
-  CreatedByte, PasswordByte: TBytes;
 begin
   SetLength(raw_nonce, 20);
   for i := 0 to High(raw_nonce) do
@@ -1113,11 +1125,7 @@ begin
   bnonce := TNetEncoding.Base64.Encode(raw_nonce);
   Nonce := BytesToString(bnonce);
   Created := GetONVIFDateTime(Now);
-  SetLength(CreatedByte, Length(Created));
-  Move(Created[1], CreatedByte[0], Length(Created));
-  SetLength(PasswordByte, Length(Password));
-  Move(Password[1], PasswordByte[0], Length(Password));
-  raw_digest := SHA1(raw_nonce + CreatedByte + PasswordByte);
+  raw_digest := SHA1(raw_nonce + StringToBytes(Created) + StringToBytes(Password));
   digest := TNetEncoding.Base64.Encode(raw_digest);
   PasswordDigest := BytesToString(digest);
 end;
