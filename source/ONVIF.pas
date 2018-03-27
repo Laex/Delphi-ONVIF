@@ -383,7 +383,7 @@ end;
 
 const
   onvifDeviceService = 'device_service';
-  onvifMedia = 'Media';
+  onvifMedia = 'media'; // me 260318 "/onvif/media" old: 'Media'
 
 function ONVIFProbe: TProbeMatchArray;
 Var
