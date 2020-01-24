@@ -122,6 +122,7 @@
         <Icon_MainIcon>$(BDS)\bin\delphi_PROJECTICON.ico</Icon_MainIcon>
         <Icns_MainIcns>$(BDS)\bin\delphi_PROJECTICNS.icns</Icns_MainIcns>
         <SanitizedProjectName>OnvifTestFmx</SanitizedProjectName>
+        <DCC_UnitSearchPath>..\..\Source;$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Base_Android)'!=''">
         <DCC_UsePackage>DBXSqliteDriver;bindcompdbx;IndyIPCommon;DBXInterBaseDriver;IndyIPServer;IndySystem;AndroidVoiceComponents;tethering;fmxFireDAC;DialogsPkg;bindcompfmx;FMXTee;DbxCommonDriver;FmxTeeUI;fmx;xmlrtl;rtl;DbxClientDriver;CustomIPTransport;dbexpress;IndyCore;bindcomp;dsnap;IndyIPClient;dbxcds;bindengine;dsnapxml;dbrtl;IndyProtocols;$(DCC_UsePackage)</DCC_UsePackage>
