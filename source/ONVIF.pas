@@ -11,14 +11,14 @@ Uses
   IdGlobal,
   IdSocketHandle,
   FMX.Dialogs
-  {$IFDEF MSWINDOWS}
-  ,Winsock
+{$IFDEF MSWINDOWS}
+    , Winsock
 {$ENDIF MSWINDOWS}
 {$IFDEF ANDROID}
-  ,Androidapi.Helpers, Androidapi.JNIBridge, Androidapi.JNI.GraphicsContentViewText,
+    , Androidapi.Helpers, Androidapi.JNIBridge, Androidapi.JNI.GraphicsContentViewText,
   Androidapi.JNI.JavaTypes, Androidapi.JNI, Androidapi.JNI.Net;
 {$ELSE}
-;
+    ;
 {$ENDIF ANDROID}
 
 Type
@@ -87,16 +87,18 @@ Type
     property ProbeType: TProbeTypeSet read FProbeType write FProbeType default [ptNetworkVideoTransmitter, ptDevice, ptNetworkVideoDisplay];
     property Timeout: Cardinal read FTimeout write FTimeout default 1000;
     property OnLogMessage: TLogMessageNotify read FOnLogMessage write FOnLogMessage;
-    property BindToAllAvailableLocalIPsType: TBindToAllAvailableLocalIPsTypeSet read FBindToAllAvailableLocalIPsType write FBindToAllAvailableLocalIPsType default [ptBindToAllAvailableLocalIPs];
+    property BindToAllAvailableLocalIPsType: TBindToAllAvailableLocalIPsTypeSet read FBindToAllAvailableLocalIPsType write FBindToAllAvailableLocalIPsType
+      default [ptBindToAllAvailableLocalIPs];
   end;
 
   TONVIFProbeThread = class(TThread)
   private
-    E: TEvent;
+    // E: TEvent;
     FProbeMatchXML: TProbeMatchXMLArray;
     FProbeTypeSet: TProbeTypeSet;
     FBindToAllAvailableLocalIPsTypeSet: TBindToAllAvailableLocalIPsTypeSet;
     FTimeout: Cardinal;
+    FUDPCounter: Int64;
     FProbeMatch: TProbeMatchArray;
     FProbeMathNotify: TProbeMathNotify;
     FProbeMathXMLNotify: TProbeMathXMLNotify;
@@ -105,9 +107,8 @@ Type
     procedure Execute; override;
   public
     constructor Create(const ProbeMathNotify: TProbeMathNotify = nil; const ProbeMathXMLNotify: TProbeMathXMLNotify = nil;
-    const ProbeTypeSet: TProbeTypeSet = [ptNetworkVideoTransmitter, ptDevice, ptNetworkVideoDisplay];
-    const BindToAllAvailableLocalIPsTypeSet: TBindToAllAvailableLocalIPsTypeSet = [ptBindToAllAvailableLocalIPs];
-    const Timeout: Cardinal = 1000);
+      const ProbeTypeSet: TProbeTypeSet = [ptNetworkVideoTransmitter, ptDevice, ptNetworkVideoDisplay];
+      const BindToAllAvailableLocalIPsTypeSet: TBindToAllAvailableLocalIPsTypeSet = [ptBindToAllAvailableLocalIPs]; const Timeout: Cardinal = 1000);
     property ProbeMatchXML: TProbeMatchXMLArray read FProbeMatchXML;
     property ProbeMatch: TProbeMatchArray read FProbeMatch;
   end;
@@ -123,7 +124,7 @@ Type
 
 type
   TIPv4 = record
-   a,b,c,d: byte;
+    a, b, c, d: byte;
   end;
 
 function ONVIFProbe: TProbeMatchArray;
@@ -141,8 +142,7 @@ Type
 
   // Addr -> http://<host>/onvif/device_service
 function ONVIFGetDeviceInformation(const Addr, UserName, Password: String): String;
-function XMLDeviceInformationToDeviceInformation(const XMLDeviceInformation: String; Var DeviceInformation: TDeviceInformation)
-  : Boolean;
+function XMLDeviceInformationToDeviceInformation(const XMLDeviceInformation: String; Var DeviceInformation: TDeviceInformation): Boolean;
 function PrepareGetDeviceInformationRequest(const UserName, Password: String): String;
 
 Type
@@ -369,12 +369,11 @@ function GetIPFromHost(var IPaddr: String): Boolean; // drg 24/12/2017
 {$IFDEF ANDROID}
 function GetWiFiManager: JWifiManager;
 {$ENDIF ANDROID}
-
 procedure Register;
 
 implementation
 
-Uses System.Generics.Defaults, System.Generics.Collections, System.NetEncoding, IdHashSHA, IdHTTP, IdURI, Xml.VerySimple; // uNativeXML;
+Uses System.Generics.Defaults, System.Generics.Collections, System.NetEncoding, IdHashSHA, IdHTTP, IdURI, XML.VerySimple; // uNativeXML;
 
 procedure Register;
 begin
@@ -383,7 +382,7 @@ end;
 
 const
   onvifDeviceService = 'device_service';
-  onvifMedia = 'Media';
+  onvifMedia         = 'Media';
 
 function ONVIFProbe: TProbeMatchArray;
 Var
@@ -476,8 +475,7 @@ begin
   ONVIFRequest(Addr, PrepareGetDeviceInformationRequest(UserName, Password), Result);
 end;
 
-function XMLDeviceInformationToDeviceInformation(const XMLDeviceInformation: String; Var DeviceInformation: TDeviceInformation)
-  : Boolean;
+function XMLDeviceInformationToDeviceInformation(const XMLDeviceInformation: String; Var DeviceInformation: TDeviceInformation): Boolean;
 var
   SS: TStringStream;
   XmlNode, Node: TXmlNode;
@@ -547,17 +545,17 @@ const
     '<soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope" xmlns:wsdl="http://www.onvif.org/ver10/device/wsdl"> ' + //
     '<soap:Header>' + //
     '<Security xmlns="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd" s:mustUnderstand="1"> ' + //
-    '<UsernameToken> ' + //
+    '<UsernameToken> ' +         //
     '<Username>%s</Username> ' + //
     '<Password Type="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0#PasswordDigest">%s</Password> ' +
     '<Nonce EncodingType="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-soap-message-security-1.0#Base64Binary">%s</Nonce> ' +
     '<Created xmlns="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd">%s</Created> ' + //
     '</UsernameToken> ' + //
-    '</Security> ' + //
-    '</soap:Header>' + //
-    '<soap:Body> ' + //
+    '</Security> ' +                  //
+    '</soap:Header>' +                //
+    '<soap:Body> ' +                  //
     '<wsdl:GetDeviceInformation/> ' + //
-    '</soap:Body> ' + //
+    '</soap:Body> ' +                 //
     '</soap:Envelope>';
 Var
   PasswordDigest, Nonce, Created: String;
@@ -579,7 +577,7 @@ var
   XML: TXmlVerySimple;
   i, j: Integer;
   Profile: TProfile;
-  A: TAnalyticsModule;
+  a: TAnalyticsModule;
 begin
   XML := TXmlVerySimple.Create;
   SS := TStringStream.Create(XMLProfiles);
@@ -593,12 +591,12 @@ begin
       if Assigned(XmlNode) then
       begin
         Profile := default (TProfile);
-//        for i := 0 to XmlNode.ContainerCount - 1 do
+        // for i := 0 to XmlNode.ContainerCount - 1 do
         for i := 0 to XmlNode.ChildNodes.Count - 1 do
         begin
-          //Node := XmlNode.Containers[i];
+          // Node := XmlNode.Containers[i];
           Node := XmlNode.ChildNodes[i];
-          if not (string(Node.Attributes['fixed']) = '') then // drg 24/12/2017
+          if not(string(Node.Attributes['fixed']) = '') then // drg 24/12/2017
             Profile.fixed := string(Node.Attributes['fixed']).ToBoolean;
           Profile.token := string(Node.Attributes['token']);
           N := Node.Find('Name');
@@ -703,8 +701,8 @@ begin
               for j := 0 to M.ChildNodes.Count - 1 do
               begin
                 K := M.ChildNodes[j];
-                A.Type_ := string(K.Attributes['Type']);
-                A.Name := string(K.Attributes['Name']);
+                a.Type_ := string(K.Attributes['Type']);
+                a.Name := string(K.Attributes['Name']);
                 /// /////////////
               end;
             end;
@@ -832,7 +830,7 @@ const
   GetProfilesFmt: String =
   // PasswordDigest,Nonce,Created // http://<host>/onvif/Media
     '<?xml version="1.0"?> ' + //
-    '<soap:Envelope ' + //
+    '<soap:Envelope ' +        //
     'xmlns:soap="http://www.w3.org/2003/05/soap-envelope" ' + //
     'xmlns:wsdl="http://www.onvif.org/ver10/media/wsdl">' + //
     '<soap:Header>' + //
@@ -843,7 +841,7 @@ const
     '<Nonce EncodingType="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-soap-message-security-1.0#Base64Binary">%s</Nonce> ' +
     '<Created xmlns="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd">%s</Created> ' + //
     '</UsernameToken> ' + //
-    '</Security> ' + //
+    '</Security> ' +   //
     '</soap:Header>' + //
     '<soap:Body xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"> ' + //
     '<GetProfiles xmlns="http://www.onvif.org/ver10/media/wsdl" /> ' + //
@@ -1012,24 +1010,24 @@ end;
 
 function PrepareGetSnapshotUriRequest(const UserName, Password, ProfileToken: String): String;
 const
-  GetSnapshotUriFmt: String = // PasswordDigest,Nonce,Created, ProfileToken
+  GetSnapshotUriFmt: String =  // PasswordDigest,Nonce,Created, ProfileToken
     '<?xml version="1.0"?> ' + //
     '<soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope" xmlns:wsdl="http://www.onvif.org/ver10/media/wsdl"> ' + //
     '<soap:Header>' + //
     '<Security xmlns="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd" s:mustUnderstand="1"> ' + //
-    '<UsernameToken> ' + //
+    '<UsernameToken> ' +         //
     '<Username>%s</Username> ' + //
     '<Password Type="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0#PasswordDigest">%s</Password> ' +
     '<Nonce EncodingType="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-soap-message-security-1.0#Base64Binary">%s</Nonce> ' +
     '<Created xmlns="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd">%s</Created> ' + //
     '</UsernameToken> ' + //
-    '</Security> ' + //
-    '</soap:Header>' + //
-    '<soap:Body> ' + //
-    '<wsdl:GetSnapshotUri> ' + //
+    '</Security> ' +                               //
+    '</soap:Header>' +                             //
+    '<soap:Body> ' +                               //
+    '<wsdl:GetSnapshotUri> ' +                     //
     '<wsdl:ProfileToken>%s</wsdl:ProfileToken> ' + //
-    '</wsdl:GetSnapshotUri> ' + //
-    '</soap:Body> ' + //
+    '</wsdl:GetSnapshotUri> ' +                    //
+    '</soap:Body> ' +                              //
     '</soap:Envelope>';
 Var
   PasswordDigest, Nonce, Created: String;
@@ -1046,7 +1044,7 @@ end;
 
 function PrepareGetStreamUriRequest(const UserName, Password, Stream, Protocol, ProfileToken: String): String;
 const
-  GetStreamUriFmt: String = // PasswordDigest,Nonce,Created,Stream,Protocol,ProfileToken // http://<host>/onvif/Media
+  GetStreamUriFmt: String =    // PasswordDigest,Nonce,Created,Stream,Protocol,ProfileToken // http://<host>/onvif/Media
     '<?xml version="1.0"?> ' + //
     '<soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope" ' + //
     'xmlns:wsdl="http://www.onvif.org/ver10/media/wsdl" xmlns:sch="http://www.onvif.org/ver10/schema"> ' + //
@@ -1058,22 +1056,22 @@ const
     '<Nonce EncodingType="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-soap-message-security-1.0#Base64Binary">%s</Nonce> ' +
     '<Created xmlns="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd">%s</Created> ' + //
     '</UsernameToken> ' + //
-    '</Security> ' + //
-    '</soap:Header>' + //
-    '<soap:Body> ' + //
-    '<wsdl:GetStreamUri> ' + //
-    '<wsdl:StreamSetup> ' + //
-    '<sch:Stream>%s</sch:Stream> ' + //
-    '<sch:Transport> ' + //
-    '<sch:Protocol>%s</sch:Protocol> ' + //
-    '<!--Optional:--> ' + //
-    '<sch:Tunnel/> ' + //
-    '</sch:Transport> ' + //
+    '</Security> ' +                                     //
+    '</soap:Header>' +                                   //
+    '<soap:Body> ' +                                     //
+    '<wsdl:GetStreamUri> ' +                             //
+    '<wsdl:StreamSetup> ' +                              //
+    '<sch:Stream>%s</sch:Stream> ' +                     //
+    '<sch:Transport> ' +                                 //
+    '<sch:Protocol>%s</sch:Protocol> ' +                 //
+    '<!--Optional:--> ' +                                //
+    '<sch:Tunnel/> ' +                                   //
+    '</sch:Transport> ' +                                //
     '<!--You may enter ANY elements at this point--> ' + //
-    '</wsdl:StreamSetup> ' + //
-    '<wsdl:ProfileToken>%s</wsdl:ProfileToken> ' + //
-    '</wsdl:GetStreamUri> ' + //
-    '</soap:Body> ' + //
+    '</wsdl:StreamSetup> ' +                             //
+    '<wsdl:ProfileToken>%s</wsdl:ProfileToken> ' +       //
+    '</wsdl:GetStreamUri> ' +                            //
+    '</soap:Body> ' +                                    //
     '</soap:Envelope>';
 
 Var
@@ -1248,10 +1246,12 @@ begin
 end;
 
 {$IFDEF MSWINDOWS}
+
 function GetIPFromHost(var IPaddr: String): Boolean;
-var WSAErr: String;
+var
+  WSAErr: String;
 type
-  Name = array[0..100] of AnsiChar;
+  Name = array [0 .. 100] of AnsiChar;
   PName = ^Name;
 var
   HEnt: pHostEnt;
@@ -1260,7 +1260,8 @@ var
   i: Integer;
 begin
   Result := False;
-  if WSAStartup($0101, WSAData) <> 0 then begin
+  if WSAStartup($0101, WSAData) <> 0 then
+  begin
     ShowMessage('Winsock is not responding.');
     Exit;
   end;
@@ -1268,49 +1269,52 @@ begin
   New(HName);
   if GetHostName(HName^, SizeOf(Name)) = 0 then
   begin
-    //HostName := StrPas(HName^);
+    // HostName := StrPas(HName^);
     HEnt := GetHostByName(HName^);
     for i := 0 to HEnt^.h_length - 1 do
-     IPaddr :=
-      Concat(IPaddr,
-      IntToStr(Ord(HEnt^.h_addr_list^[i])) + '.');
+      IPaddr := Concat(IPaddr, IntToStr(Ord(HEnt^.h_addr_list^[i])) + '.');
     SetLength(IPaddr, Length(IPaddr) - 1);
     Result := True;
   end
-  else begin
-   case WSAGetLastError of
-    WSANOTINITIALISED:WSAErr:='WSANotInitialised';
-    WSAENETDOWN      :WSAErr:='WSAENetDown';
-    WSAEINPROGRESS   :WSAErr:='WSAEInProgress';
-   end;
-   ShowMessage(WSAErr);
+  else
+  begin
+    case WSAGetLastError of
+      WSANOTINITIALISED:
+        WSAErr := 'WSANotInitialised';
+      WSAENETDOWN:
+        WSAErr := 'WSAENetDown';
+      WSAEINPROGRESS:
+        WSAErr := 'WSAEInProgress';
+    end;
+    ShowMessage(WSAErr);
   end;
   Dispose(HName);
   WSACleanup;
 end;
 {$ENDIF MSWINDOWS}
-
 {$IFDEF ANDROID}
+
 function GetIPFromHost(var IPaddr: String): Boolean;
 var
-WiFiManager: Androidapi.JNI.Net.JWifiManager;
-lock: JWifiManager_MulticastLock;
+  WiFiManager: Androidapi.JNI.Net.JWifiManager;
+  lock: JWifiManager_MulticastLock;
 begin
   Result := False;
-  WifiManager := GetWiFiManager;
-  lock := WifiManager.createMulticastLock(StringToJString('mylock'));
+  WiFiManager := GetWiFiManager;
+  lock := WiFiManager.createMulticastLock(StringToJString('mylock'));
   lock.acquire();
   // TODO chiedere di attivare wifi e riprovare (senza uscire)
-  if not (WifiManager.getWifiState = TJWifiManager.JavaClass.WIFI_STATE_ENABLED) then begin
+  if not(WiFiManager.getWifiState = TJWifiManager.JavaClass.WIFI_STATE_ENABLED) then
+  begin
     TSendMessageThread.Create(TLogMessage.Create('WiFi not enabled')).Start;
     ShowMessage('WiFi not enabled');
     Exit;
   end;
-  with TIPv4(WifiManager.getConnectionInfo.getIpAddress) do
+  with TIPv4(WiFiManager.getConnectionInfo.getIpAddress) do
     IPaddr := Format('%d.%d.%d.%d', [a, b, c, d]);
   TSendMessageThread.Create(TLogMessage.Create(IPaddr)).Start;
-  //with TIPv4(WifiManager.getDhcpInfo.netmask) do
-  //  LocalMask := Format('%d.%d.%d.%d', [a, b, c, d]);
+  // with TIPv4(WifiManager.getDhcpInfo.netmask) do
+  // LocalMask := Format('%d.%d.%d.%d', [a, b, c, d]);
   Result := True;
 end;
 
@@ -1339,8 +1343,8 @@ end;
 
 constructor TSendMessageThread.Create(msg: TMessage);
 begin
-  inherited Create(true);
-  self.FreeOnTerminate := true;
+  inherited Create(True);
+  self.FreeOnTerminate := True;
   self.msg := msg;
 end;
 
@@ -1351,8 +1355,8 @@ end;
 
 { TONVIFProbeThread }
 
-constructor TONVIFProbeThread.Create(const ProbeMathNotify: TProbeMathNotify; const ProbeMathXMLNotify: TProbeMathXMLNotify;
-const ProbeTypeSet: TProbeTypeSet; const BindToAllAvailableLocalIPsTypeSet: TBindToAllAvailableLocalIPsTypeSet; const Timeout: Cardinal);
+constructor TONVIFProbeThread.Create(const ProbeMathNotify: TProbeMathNotify; const ProbeMathXMLNotify: TProbeMathXMLNotify; const ProbeTypeSet: TProbeTypeSet;
+const BindToAllAvailableLocalIPsTypeSet: TBindToAllAvailableLocalIPsTypeSet; const Timeout: Cardinal);
 begin
   inherited Create(True);
   FProbeTypeSet := ProbeTypeSet;
@@ -1387,20 +1391,22 @@ const
 Var
   UDPServer: TIdUDPServer;
   IPaddr: String;
+  locTimeout, locTimeoutDeltha: Cardinal;
 begin
   if FProbeTypeSet = [] then
     Exit;
   UDPServer := TIdUDPServer.Create(nil);
-  E := TEvent.Create;
+  // E := TEvent.Create;
   try
     UDPServer.BroadcastEnabled := True;
-    E.ResetEvent;
+    // E.ResetEvent;
     UDPServer.OnUDPRead := UDPServerUDPRead;
     with UDPServer.Bindings.Add do
     begin
       if ptBindToAllAvailableLocalIPs in FBindToAllAvailableLocalIPsTypeSet then
         IP := '0.0.0.0' // bind to all available local IPs
-      else begin
+      else
+      begin
         if GetIPFromHost(IPaddr) = False then
           Exit;
         IP := IPaddr;
@@ -1411,21 +1417,45 @@ begin
     if UDPServer.Active then
     begin
       if ptNetworkVideoTransmitter in FProbeTypeSet then
+      begin
         UDPServer.SendBuffer('239.255.255.250', 3702, ToBytes(NetworkVideoTransmitter));
+        TInterlocked.Increment(FUDPCounter);
+      end;
 
       if ptDevice in FProbeTypeSet then
+      begin
         UDPServer.SendBuffer('239.255.255.250', 3702, ToBytes(Device));
+        TInterlocked.Increment(FUDPCounter);
+      end;
 
       if ptNetworkVideoDisplay in FProbeTypeSet then
+      begin
         UDPServer.SendBuffer('239.255.255.250', 3702, ToBytes(NetworkVideoDisplay));
+        TInterlocked.Increment(FUDPCounter);
+      end;
 
-      While (E.WaitFor(FTimeout) = wrSignaled) and (not Terminated) do
-        E.ResetEvent;
+      locTimeout := FTimeout;
+      While (not Terminated) and (TInterlocked.Read(FUDPCounter) > 0) and (locTimeout > 0) do
+      begin
+        if locTimeout > 100 then
+          locTimeoutDeltha := 100
+        else
+          locTimeoutDeltha := locTimeout;
+
+        if locTimeout <> INFINITE then
+          locTimeout := locTimeout - locTimeoutDeltha;
+
+        Sleep(locTimeoutDeltha);
+      end;
+
+      // While (E.WaitFor(FTimeout) = wrSignaled) and (not Terminated) do
+      // E.ResetEvent;
+
     end;
   finally
     UDPServer.Active := False;
     UDPServer.Free;
-    E.Free;
+    // E.Free;
   end;
 end;
 
@@ -1434,8 +1464,7 @@ Var
   ProbeMatch: TProbeMatch;
   ProbeMatchStr: string;
 begin
-  E.SetEvent;
-
+  // E.SetEvent;
 
   ProbeMatchStr := IdGlobal.BytesToString(AData);
 
@@ -1451,6 +1480,7 @@ begin
     if Assigned(FProbeMathNotify) then
       FProbeMathNotify(FProbeMatch[High(FProbeMatch)]);
   end;
+  TInterlocked.Decrement(FUDPCounter);
 end;
 
 { TONVIFProbe }
@@ -1526,9 +1556,11 @@ end;
 
 procedure TONVIFProbe.ProcessMessage(const Sender: TObject; const M: TMessage);
 begin
-  if M is TLogMessage then begin
-  if assigned(OnLogMessage) then
-    OnLogMessage((M as TLogMessage).msg);
+  if M is TLogMessage then
+  begin
+    if Assigned(OnLogMessage) then
+      OnLogMessage((M as TLogMessage).msg);
   end;
 end;
+
 end.

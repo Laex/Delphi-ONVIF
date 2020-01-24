@@ -23,7 +23,7 @@ object Form1: TForm1
     Height = 25
     Anchors = [akRight, akBottom]
     Caption = 'Probe'
-    TabOrder = 0
+    TabOrder = 1
     OnClick = btn1Click
   end
   object tv1: TTreeView
@@ -33,7 +33,7 @@ object Form1: TForm1
     Height = 493
     Anchors = [akLeft, akTop, akRight, akBottom]
     Indent = 19
-    TabOrder = 1
+    TabOrder = 0
     OnDblClick = tv1DblClick
   end
   object onvfprb1: TONVIFProbe
