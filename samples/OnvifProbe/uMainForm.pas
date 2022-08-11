@@ -4,17 +4,28 @@ interface
 
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
-  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, ONVIF, Vcl.StdCtrls, Vcl.ComCtrls;
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, ONVIF, Vcl.StdCtrls, Vcl.ComCtrls, Vcl.Imaging.jpeg,
+  Vcl.ExtCtrls;
 
 type
   TForm1 = class(TForm)
     onvfprb1: TONVIFProbe;
     btn1: TButton;
     tv1: TTreeView;
+    PageControl1: TPageControl;
+    TabSheet1: TTabSheet;
+    TabSheet2: TTabSheet;
+    Panel1: TPanel;
+    cmURL: TLabeledEdit;
+    Button1: TButton;
+    Image1: TImage;
+    cmUser: TLabeledEdit;
+    cmPass: TLabeledEdit;
     procedure btn1Click(Sender: TObject);
     procedure onvfprb1ProbeMath(const ProbeMatch: TProbeMatch);
     procedure onvfprb1Completed(Sender: TObject);
     procedure tv1DblClick(Sender: TObject);
+    procedure Button1Click(Sender: TObject);
   private
     F: TProbeMatchArray;
   public
@@ -36,6 +47,32 @@ begin
   tv1.Items.Clear;
   btn1.Enabled := False;
   onvfprb1.ExecuteAsync;
+end;
+
+procedure TForm1.Button1Click(Sender: TObject);
+var
+  mst: TMemoryStream;
+  profxml, snapxml, ct:string;
+  jpg:TJPEGImage;
+  prof:TProfiles;
+  snap:TSnapshotUri;
+begin
+  // Get snapshot URI
+  profxml := Trim(ONVIFGetProfiles(cmURL.Text + '/onvif/media', cmUser.Text, cmPass.Text));
+  XMLProfilesToProfiles(profxml,prof);
+  if Length(prof) = 0 then exit;
+  snapxml := Trim(ONVIFGetSnapshotUri(cmURL.Text + '/onvif/media', cmUser.Text, cmPass.Text, prof[0].token));
+  XMLSnapshotUriToSnapshotUri(snapxml, snap);
+  // Get image from URI
+  mst := TMemoryStream.Create;
+  if GetSnapshot(snap.Uri, cmUser.Text, cmPass.Text, mst, ct) then begin
+    mst.Position := 0;
+    jpg := TJPEGImage.Create;
+    jpg.LoadFromStream(mst);
+    Image1.Picture.Graphic := jpg;
+    jpg.Free;
+  end;
+  mst.Free;
 end;
 
 procedure TForm1.onvfprb1Completed(Sender: TObject);
