@@ -350,7 +350,7 @@ function PrepareGetSnapshotUriRequest(const UserName, Password, ProfileToken: St
 function GetSnapshot(const SnapshotUri: String; const Stream: TStream): Boolean;overload;
 ///<summary> Get camera picture snapshot into the stream
 ///</summary>
-procedure GetSnapshot(const SnapshotUri, UserName, Password: String; const Stream: TStream);overload;
+function GetSnapshot(const SnapshotUri, UserName, Password: String; const Stream: TStream; out ContentType:string):boolean;overload;
 
 //
 // ------------------------
@@ -960,15 +960,15 @@ begin
       ProtocolVersion := pv1_1;
       HTTPOptions := [hoNoProtocolErrorException, hoWantProtocolErrorContent];
       Get(SnapshotUri, Stream);
-      result := true;
     end;
+    result := idhtp1.ResponseCode = 200;
   finally
     Uri.Free;
     idhtp1.Free;
   end;
 end;
 
-procedure GetSnapshot(const SnapshotUri, UserName, Password: String; const Stream: TStream);overload;
+function GetSnapshot(const SnapshotUri, UserName, Password: String; const Stream: TStream; out ContentType:string):boolean;overload;
 Var
   idhtp1: TIdHTTP;
   Uri: TIdURI;
@@ -996,6 +996,8 @@ begin
       HTTPOptions := [hoNoProtocolErrorException, hoWantProtocolErrorContent];
       Get(Uri.URI, Stream);
     end;
+    ContentType := idhtp1.Response.ContentType;
+    result := idhtp1.ResponseCode = 200;
   finally
     Uri.Free;
     idhtp1.Free;
