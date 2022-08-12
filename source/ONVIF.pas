@@ -10,6 +10,7 @@ Uses
   IdUDPServer,
   IdGlobal,
   IdSocketHandle,
+  IdAuthenticationDigest,
   FMX.Dialogs
 {$IFDEF MSWINDOWS}
     , Winsock
@@ -346,7 +347,11 @@ type
 function ONVIFGetSnapshotUri(const Addr, UserName, Password, ProfileToken: String): String;
 function XMLSnapshotUriToSnapshotUri(const XMLSnapshotUri: String; Var SnapshotUri: TSnapshotUri): Boolean;
 function PrepareGetSnapshotUriRequest(const UserName, Password, ProfileToken: String): String;
-function GetSnapshot(const SnapshotUri: String; const Stream: TStream): Boolean;
+function GetSnapshot(const SnapshotUri: String; const Stream: TStream): Boolean;overload;
+///<summary> Get camera picture snapshot into the stream
+///</summary>
+function GetSnapshot(const SnapshotUri, UserName, Password: String; const Stream: TStream; out ContentType:string):boolean;overload;
+
 //
 // ------------------------
 //
@@ -956,11 +961,49 @@ begin
       HTTPOptions := [hoNoProtocolErrorException, hoWantProtocolErrorContent];
       Get(SnapshotUri, Stream);
     end;
+    result := idhtp1.ResponseCode = 200;
   finally
     Uri.Free;
     idhtp1.Free;
   end;
 end;
+
+function GetSnapshot(const SnapshotUri, UserName, Password: String; const Stream: TStream; out ContentType:string):boolean;overload;
+Var
+  idhtp1: TIdHTTP;
+  Uri: TIdURI;
+begin
+  idhtp1 := TIdHTTP.Create;
+  idhtp1.Request.Authentication := TIdDigestAuthentication.Create;
+  idhtp1.Request.username := UserName;
+  idhtp1.Request.Password := Password;
+  Uri := TIdURI.Create(SnapshotUri);
+  try
+    With idhtp1 do
+    begin
+      AllowCookies := True;
+      HandleRedirects := True;
+      Request.Accept := 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8';
+      Request.UserAgent := 'Mozilla/3.0 (compatible; Indy Library)';
+      Request.Host := '';
+      Request.Connection := '';
+      Request.Accept := '';
+      Request.UserAgent := '';
+      Request.CustomHeaders.Clear;
+      Request.ContentType := 'text/xml;charset=utf-8';
+      Request.CustomHeaders.Add('Host: ' + Uri.Host);
+      ProtocolVersion := pv1_1;
+      HTTPOptions := [hoNoProtocolErrorException, hoWantProtocolErrorContent];
+      Get(Uri.URI, Stream);
+    end;
+    ContentType := idhtp1.Response.ContentType;
+    result := idhtp1.ResponseCode = 200;
+  finally
+    Uri.Free;
+    idhtp1.Free;
+  end;
+end;
+
 
 function ONVIFGetSnapshotUri(const Addr, UserName, Password, ProfileToken: String): String;
 begin
