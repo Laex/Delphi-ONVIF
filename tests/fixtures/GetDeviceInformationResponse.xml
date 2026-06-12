@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope">
+  <soap:Body>
+    <tds:GetDeviceInformationResponse xmlns:tds="http://www.onvif.org/ver10/device/wsdl">
+      <tds:Manufacturer>TestManufacturer</tds:Manufacturer>
+      <tds:Model>TestModel</tds:Model>
+      <tds:FirmwareVersion>1.0.0</tds:FirmwareVersion>
+      <tds:SerialNumber>SN12345</tds:SerialNumber>
+      <tds:HardwareId>HW1</tds:HardwareId>
+    </tds:GetDeviceInformationResponse>
+  </soap:Body>
+</soap:Envelope>

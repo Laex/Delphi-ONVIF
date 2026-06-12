@@ -1,0 +1,100 @@
+object IPCameraLoginDlgDlg: TIPCameraLoginDlgDlg
+  Left = 0
+  Top = 0
+  Caption = 'Login'
+  ClientHeight = 145
+  ClientWidth = 256
+  FormFactor.Width = 320
+  FormFactor.Height = 480
+  FormFactor.Devices = [Desktop]
+  DesignerMasterStyle = 3
+  object RLogin: TRectangle
+    Size.Width = 256.000000000000000000
+    Size.Height = 145.000000000000000000
+    Size.PlatformDefault = False
+    XRadius = 6.000000000000000000
+    YRadius = 6.000000000000000000
+    object CBCancel: TCornerButton
+      Position.X = 144.000000000000000000
+      Position.Y = 115.000000000000000000
+      Sides = [Top, Left, Bottom, Right]
+      Size.Width = 80.000000000000000000
+      Size.Height = 22.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 6
+      Text = 'Cancel'
+      XRadius = 3.000000000000000000
+      YRadius = 3.000000000000000000
+      OnClick = CBCancelClick
+    end
+    object CBOK: TCornerButton
+      Position.X = 40.000000000000000000
+      Position.Y = 115.000000000000000000
+      Sides = [Top, Left, Bottom, Right]
+      Size.Width = 80.000000000000000000
+      Size.Height = 22.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 4
+      Text = 'OK'
+      XRadius = 3.000000000000000000
+      YRadius = 3.000000000000000000
+      OnClick = CBOKClick
+    end
+    object EdPsw: TEdit
+      Touch.InteractiveGestures = [LongTap, DoubleTap]
+      TabOrder = 2
+      TextSettings.Font.Size = 10.000000000000000000
+      Position.X = 80.000000000000000000
+      Position.Y = 70.000000000000000000
+      Size.Width = 161.000000000000000000
+      Size.Height = 32.000000000000000000
+      Size.PlatformDefault = False
+      StyledSettings = [Family, Style, FontColor]
+    end
+    object EdUser: TEdit
+      Touch.InteractiveGestures = [LongTap, DoubleTap]
+      TabOrder = 0
+      TextSettings.Font.Size = 10.000000000000000000
+      Position.X = 80.000000000000000000
+      Position.Y = 38.000000000000000000
+      Size.Width = 161.000000000000000000
+      Size.Height = 32.000000000000000000
+      Size.PlatformDefault = False
+      StyledSettings = [Family, Style, FontColor]
+    end
+    object Label1: TLabel
+      StyledSettings = [Family, Style, FontColor]
+      Position.X = 8.000000000000000000
+      Position.Y = 42.000000000000000000
+      Size.Width = 41.000000000000000000
+      Size.Height = 20.000000000000000000
+      Size.PlatformDefault = False
+      TextSettings.Font.Size = 10.000000000000000000
+      Text = 'User'
+      TabOrder = 1
+    end
+    object Label2: TLabel
+      StyledSettings = [Family, Style, FontColor]
+      Position.X = 8.000000000000000000
+      Position.Y = 74.000000000000000000
+      Size.Width = 41.000000000000000000
+      Size.Height = 20.000000000000000000
+      Size.PlatformDefault = False
+      TextSettings.Font.Size = 10.000000000000000000
+      Text = 'Psw'
+      TabOrder = 3
+    end
+    object LbHost: TLabel
+      StyledSettings = [Family, Style]
+      Position.X = 8.000000000000000000
+      Position.Y = 3.000000000000000000
+      Size.Width = 241.000000000000000000
+      Size.Height = 25.000000000000000000
+      Size.PlatformDefault = False
+      TextSettings.Font.Size = 10.000000000000000000
+      TextSettings.FontColor = claBlue
+      TextSettings.WordWrap = False
+      TabOrder = 5
+    end
+  end
+end

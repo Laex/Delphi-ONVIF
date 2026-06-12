@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope"
+  xmlns:tse="http://www.onvif.org/ver10/search/wsdl">
+  <soap:Body>
+    <tse:GetRecordingSearchResultsResponse>
+      <tse:ResultList>
+        <tse:RecordingInformation>
+          <tse:RecordingToken>rec001</tse:RecordingToken>
+          <tse:TrackToken>track001</tse:TrackToken>
+          <tse:EarliestRecording>2026-06-01T10:00:00Z</tse:EarliestRecording>
+          <tse:LatestRecording>2026-06-01T11:00:00Z</tse:LatestRecording>
+        </tse:RecordingInformation>
+      </tse:ResultList>
+      <tse:SearchState>Completed</tse:SearchState>
+    </tse:GetRecordingSearchResultsResponse>
+  </soap:Body>
+</soap:Envelope>

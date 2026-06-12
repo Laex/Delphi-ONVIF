@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope"
+  xmlns:tr2="http://www.onvif.org/ver20/media/wsdl">
+  <soap:Body>
+    <tr2:GetSnapshotUriResponse>
+      <tr2:Uri>http://192.168.1.100/snapshot.jpg</tr2:Uri>
+    </tr2:GetSnapshotUriResponse>
+  </soap:Body>
+</soap:Envelope>

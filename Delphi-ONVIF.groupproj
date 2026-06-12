@@ -1,0 +1,60 @@
+﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <PropertyGroup>
+        <ProjectGuid>{7748418F-576C-4C31-A931-C4CF3EDF70BE}</ProjectGuid>
+    </PropertyGroup>
+    <ItemGroup>
+        <Projects Include="packages\ONVIF\ONVIF.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="samples\OnvifProbe\OnvifDemo.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="samples\OnvifTestFmx\OnvifTestFmx.dproj">
+            <Dependencies/>
+        </Projects>
+    </ItemGroup>
+    <ProjectExtensions>
+        <Borland.Personality>Default.Personality.12</Borland.Personality>
+        <Borland.ProjectType/>
+        <BorlandProject>
+            <Default.Personality/>
+        </BorlandProject>
+    </ProjectExtensions>
+    <Target Name="ONVIF">
+        <MSBuild Projects="packages\ONVIF\ONVIF.dproj"/>
+    </Target>
+    <Target Name="ONVIF:Clean">
+        <MSBuild Projects="packages\ONVIF\ONVIF.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="ONVIF:Make">
+        <MSBuild Projects="packages\ONVIF\ONVIF.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="OnvifDemo">
+        <MSBuild Projects="samples\OnvifProbe\OnvifDemo.dproj"/>
+    </Target>
+    <Target Name="OnvifDemo:Clean">
+        <MSBuild Projects="samples\OnvifProbe\OnvifDemo.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="OnvifDemo:Make">
+        <MSBuild Projects="samples\OnvifProbe\OnvifDemo.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="OnvifTestFmx">
+        <MSBuild Projects="samples\OnvifTestFmx\OnvifTestFmx.dproj"/>
+    </Target>
+    <Target Name="OnvifTestFmx:Clean">
+        <MSBuild Projects="samples\OnvifTestFmx\OnvifTestFmx.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="OnvifTestFmx:Make">
+        <MSBuild Projects="samples\OnvifTestFmx\OnvifTestFmx.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="Build">
+        <CallTarget Targets="ONVIF;OnvifDemo;OnvifTestFmx"/>
+    </Target>
+    <Target Name="Clean">
+        <CallTarget Targets="ONVIF:Clean;OnvifDemo:Clean;OnvifTestFmx:Clean"/>
+    </Target>
+    <Target Name="Make">
+        <CallTarget Targets="ONVIF:Make;OnvifDemo:Make;OnvifTestFmx:Make"/>
+    </Target>
+    <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
+</Project>

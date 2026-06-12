@@ -1,0 +1,114 @@
+package ONVIF;
+
+
+
+{$R *.res}
+
+{$R *.dres}
+
+{$IFDEF IMPLICITBUILDING This IFDEF should not be used by users}
+
+{$ALIGN 8}
+
+{$ASSERTIONS ON}
+
+{$BOOLEVAL OFF}
+
+{$DEBUGINFO OFF}
+
+{$EXTENDEDSYNTAX ON}
+
+{$IMPORTEDDATA ON}
+
+{$IOCHECKS ON}
+
+{$LOCALSYMBOLS ON}
+
+{$LONGSTRINGS ON}
+
+{$OPENSTRINGS ON}
+
+{$OPTIMIZATION OFF}
+
+{$OVERFLOWCHECKS OFF}
+
+{$RANGECHECKS OFF}
+
+{$REFERENCEINFO ON}
+
+{$SAFEDIVIDE OFF}
+
+{$STACKFRAMES ON}
+
+{$TYPEDADDRESS OFF}
+
+{$VARSTRINGCHECKS ON}
+
+{$WRITEABLECONST OFF}
+
+{$MINENUMSIZE 1}
+
+{$IMAGEBASE $400000}
+
+{$DEFINE DEBUG}
+
+{$ENDIF IMPLICITBUILDING}
+
+{$IMPLICITBUILD ON}
+
+
+
+requires
+
+  rtl,
+
+  IndySystem,
+
+  IndyCore,
+
+  IndyProtocols;
+
+
+
+contains
+
+  ONVIF.Types in '..\..\src\ONVIF.Types.pas',
+
+  ONVIF.Xml in '..\..\src\ONVIF.Xml.pas',
+
+  ONVIF.Core in '..\..\src\ONVIF.Core.pas',
+
+  ONVIF.Device in '..\..\src\ONVIF.Device.pas',
+
+  ONVIF.Media in '..\..\src\ONVIF.Media.pas',
+
+  ONVIF.Media2 in '..\..\src\ONVIF.Media2.pas',
+
+  ONVIF.PTZ in '..\..\src\ONVIF.PTZ.pas',
+
+  ONVIF.Imaging in '..\..\src\ONVIF.Imaging.pas',
+
+  ONVIF.Events in '..\..\src\ONVIF.Events.pas',
+
+  ONVIF.Analytics in '..\..\src\ONVIF.Analytics.pas',
+
+  ONVIF.Recording in '..\..\src\ONVIF.Recording.pas',
+
+  ONVIF.Client in '..\..\src\ONVIF.Client.pas',
+
+  ONVIF.Services in '..\..\src\ONVIF.Services.pas',
+
+  ONVIF.Platform in '..\..\src\ONVIF.Platform.pas',
+
+  ONVIF.Discovery in '..\..\src\ONVIF.Discovery.pas',
+
+  ONVIF.Demo in '..\..\src\ONVIF.Demo.pas',
+
+  ONVIF in '..\..\src\ONVIF.pas',
+
+  Xml.VerySimple in '..\..\src\ThirdParty\Xml.VerySimple.pas';
+
+
+
+end.
+

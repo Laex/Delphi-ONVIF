@@ -1,0 +1,309 @@
+object FormOnvifTest: TFormOnvifTest
+  Left = 0
+  Top = 0
+  Caption = 'ONVIF VMS Demo (FMX)'
+  ClientHeight = 720
+  ClientWidth = 399
+  FormFactor.Width = 320
+  FormFactor.Height = 480
+  FormFactor.Devices = [Desktop]
+  OnCreate = FormCreate
+  OnDestroy = FormDestroy
+  DesignerMasterStyle = 3
+  object Panel1: TPanel
+    Align = Client
+    Size.Width = 399.00000000000000000
+    Size.Height = 720.00000000000000000
+    Size.PlatformDefault = False
+    TabOrder = 0
+    object TreeView1: TTreeView
+      Touch.GestureManager = GestureManager1
+      Touch.InteractiveGestures = [Pan, DoubleTap]
+      OnGesture = TreeView1Gesture
+      Align = Top
+      Size.Width = 399.00000000000000000
+      Size.Height = 160.00000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 0
+      OnDblClick = TreeView1DblClick
+      Viewport.Width = 399.00000000000000000
+      Viewport.Height = 160.00000000000000000
+    end
+    object LayoutDiscovery: TLayout
+      Align = Top
+      Position.Y = 160.00000000000000000
+      Size.Width = 399.00000000000000000
+      Size.Height = 120.00000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 4
+      object edtDirectHost: TEdit
+        Touch.InteractiveGestures = [LongTap, DoubleTap]
+        TabOrder = 0
+        Text = '192.168.1.100'
+        TextSettings.HorzAlign = Center
+        Position.X = 8.00000000000000000
+        Position.Y = 4.00000000000000000
+        Size.Width = 280.00000000000000000
+        Size.Height = 32.00000000000000000
+        Size.PlatformDefault = False
+      end
+      object btnDirectConnect: TButton
+        Position.X = 296.00000000000000000
+        Position.Y = 4.00000000000000000
+        Size.Width = 96.00000000000000000
+        Size.Height = 28.00000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 1
+        Text = 'Connect'
+        OnClick = btnDirectConnectClick
+      end
+      object edtDirectUser: TEdit
+        Touch.InteractiveGestures = [LongTap, DoubleTap]
+        TabOrder = 2
+        Text = 'onvif'
+        Position.X = 8.00000000000000000
+        Position.Y = 36.00000000000000000
+        Size.Width = 184.00000000000000000
+        Size.Height = 32.00000000000000000
+        Size.PlatformDefault = False
+      end
+      object edtDirectPass: TEdit
+        Touch.InteractiveGestures = [LongTap, DoubleTap]
+        TabOrder = 3
+        Password = True
+        Text = 'test1234'
+        Position.X = 200.00000000000000000
+        Position.Y = 36.00000000000000000
+        Size.Width = 192.00000000000000000
+        Size.Height = 32.00000000000000000
+        Size.PlatformDefault = False
+      end
+      object edtUnicastHost: TEdit
+        Touch.InteractiveGestures = [LongTap, DoubleTap]
+        TabOrder = 4
+        Text = '192.168.1.100'
+        Position.X = 8.00000000000000000
+        Position.Y = 68.00000000000000000
+        Size.Width = 120.00000000000000000
+        Size.Height = 32.00000000000000000
+        Size.PlatformDefault = False
+      end
+      object btnUnicastProbe: TButton
+        Position.X = 136.00000000000000000
+        Position.Y = 68.00000000000000000
+        Size.Width = 88.00000000000000000
+        Size.Height = 28.00000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 5
+        Text = 'Unicast'
+        OnClick = btnUnicastProbeClick
+      end
+      object edtSubnet: TEdit
+        Touch.InteractiveGestures = [LongTap, DoubleTap]
+        TabOrder = 6
+        Text = '192.168.1.0/24'
+        Position.X = 232.00000000000000000
+        Position.Y = 68.00000000000000000
+        Size.Width = 96.00000000000000000
+        Size.Height = 32.00000000000000000
+        Size.PlatformDefault = False
+      end
+      object btnSubnetScan: TButton
+        Position.X = 336.00000000000000000
+        Position.Y = 68.00000000000000000
+        Size.Width = 56.00000000000000000
+        Size.Height = 28.00000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 7
+        Text = 'Scan'
+        OnClick = btnSubnetScanClick
+      end
+    end
+    object LayoutActions: TLayout
+      Align = Top
+      Position.Y = 280.00000000000000000
+      Size.Width = 399.00000000000000000
+      Size.Height = 232.00000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 1
+      object btnConnect: TButton
+        Position.X = 8.00000000000000000
+        Position.Y = 8.00000000000000000
+        Size.Width = 188.00000000000000000
+        Size.Height = 28.00000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 0
+        Text = 'Connect'
+        OnClick = btnConnectClick
+      end
+      object btnStream: TButton
+        Position.X = 204.00000000000000000
+        Position.Y = 8.00000000000000000
+        Size.Width = 188.00000000000000000
+        Size.Height = 28.00000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 1
+        Text = 'Stream URI'
+        OnClick = btnStreamClick
+      end
+      object btnSnapshot: TButton
+        Position.X = 8.00000000000000000
+        Position.Y = 44.00000000000000000
+        Size.Width = 188.00000000000000000
+        Size.Height = 28.00000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 2
+        Text = 'Snapshot URI'
+        OnClick = btnSnapshotClick
+      end
+      object btnImaging: TButton
+        Position.X = 204.00000000000000000
+        Position.Y = 44.00000000000000000
+        Size.Width = 188.00000000000000000
+        Size.Height = 28.00000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 3
+        Text = 'Imaging'
+        OnClick = btnImagingClick
+      end
+      object btnPTZLeft: TButton
+        Position.X = 8.00000000000000000
+        Position.Y = 80.00000000000000000
+        Size.Width = 44.00000000000000000
+        Size.Height = 28.00000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 4
+        Text = 'L'
+        OnClick = btnPTZLeftClick
+      end
+      object btnPTZRight: TButton
+        Position.X = 56.00000000000000000
+        Position.Y = 80.00000000000000000
+        Size.Width = 44.00000000000000000
+        Size.Height = 28.00000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 5
+        Text = 'R'
+        OnClick = btnPTZRightClick
+      end
+      object btnPTZUp: TButton
+        Position.X = 104.00000000000000000
+        Position.Y = 80.00000000000000000
+        Size.Width = 44.00000000000000000
+        Size.Height = 28.00000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 6
+        Text = 'U'
+        OnClick = btnPTZUpClick
+      end
+      object btnPTZDown: TButton
+        Position.X = 152.00000000000000000
+        Position.Y = 80.00000000000000000
+        Size.Width = 44.00000000000000000
+        Size.Height = 28.00000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 7
+        Text = 'D'
+        OnClick = btnPTZDownClick
+      end
+      object btnPTZStop: TButton
+        Position.X = 204.00000000000000000
+        Position.Y = 80.00000000000000000
+        Size.Width = 188.00000000000000000
+        Size.Height = 28.00000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 8
+        Text = 'PTZ Stop'
+        OnClick = btnPTZStopClick
+      end
+      object btnPullEvents: TButton
+        Position.X = 8.00000000000000000
+        Position.Y = 116.00000000000000000
+        Size.Width = 188.00000000000000000
+        Size.Height = 28.00000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 9
+        Text = 'PullPoint Events'
+        OnClick = btnPullEventsClick
+      end
+      object btnEvents: TButton
+        Position.X = 204.00000000000000000
+        Position.Y = 116.00000000000000000
+        Size.Width = 188.00000000000000000
+        Size.Height = 28.00000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 10
+        Text = 'EventHub'
+        OnClick = btnEventsClick
+      end
+      object btnRegistry: TButton
+        Position.X = 8.00000000000000000
+        Position.Y = 152.00000000000000000
+        Size.Width = 188.00000000000000000
+        Size.Height = 28.00000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 11
+        Text = 'Registry'
+        OnClick = btnRegistryClick
+      end
+      object btnRecord: TButton
+        Position.X = 204.00000000000000000
+        Position.Y = 152.00000000000000000
+        Size.Width = 188.00000000000000000
+        Size.Height = 28.00000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 12
+        Text = 'Recording'
+        OnClick = btnRecordClick
+      end
+      object btnReplay: TButton
+        Position.X = 8.00000000000000000
+        Position.Y = 188.00000000000000000
+        Size.Width = 384.00000000000000000
+        Size.Height = 28.00000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 13
+        Text = 'Device Replay'
+        OnClick = btnReplayClick
+      end
+    end
+    object Memo1: TMemo
+      Touch.InteractiveGestures = [Pan, LongTap, DoubleTap]
+      DataDetectorTypes = []
+      ReadOnly = True
+      Align = Client
+      Size.Width = 399.00000000000000000
+      Size.Height = 172.00000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 2
+      Viewport.Width = 391.00000000000000000
+      Viewport.Height = 164.00000000000000000
+    end
+    object CBProbe: TCornerButton
+      Align = Bottom
+      Position.Y = 684.00000000000000000
+      Sides = [Top, Left, Bottom, Right]
+      Size.Width = 399.00000000000000000
+      Size.Height = 36.00000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 3
+      Text = 'Multicast Probe'
+      XRadius = 3.00000000000000000
+      YRadius = 3.00000000000000000
+      OnClick = CBProbeClick
+    end
+  end
+  object ONVIFProbe1: TONVIFProbe
+    OnCompleted = ONVIFProbe1Completed
+    OnProbeMatch = ONVIFProbe1ProbeMath
+    OnProbeMath = ONVIFProbe1ProbeMath
+    OnLogMessage = ONVIFProbe1LogMessage
+    Left = 280
+    Top = 480
+  end
+  object GestureManager1: TGestureManager
+    Sensitivity = 80.00000000000000000
+    Left = 88
+    Top = 488
+  end
+end
